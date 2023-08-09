@@ -9,6 +9,9 @@ class User(AbstractUser):
     follows = models.ManyToManyField(Blog, related_name="followed_by", blank=True, verbose_name="Подписки пользователя")
 
     def save(self, *args, **kwargs):
-        blog = Blog.objects.create()
-        self.blog = blog
+        self.blog = Blog.objects.create()
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.blog.delete()
+        super().delete(*args, **kwargs)
