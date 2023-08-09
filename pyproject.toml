@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "nekidaem-assessment"
+version = "0.0.1"
+description = "NeKidaem job assessment test"
+authors = ["Ivan Skvortsov <pprofcheg@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "nekidaem_assessment"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = "4.1"
+djangorestframework = "^3.14.0"
+python-dotenv = "^1.0.0"
+psycopg2-binary = "^2.9.7"
+
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.1.0"
+pre-commit = "^3.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
