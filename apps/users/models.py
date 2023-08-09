@@ -5,7 +5,7 @@ from apps.blogs.models import Blog, Post
 
 
 class User(AbstractUser):
-    blog = models.OneToOneField(Blog, on_delete=models.CASCADE, verbose_name="Блог пользователя")
+    blog = models.OneToOneField(Blog, related_name="owner", on_delete=models.CASCADE, verbose_name="Блог пользователя")
     follows = models.ManyToManyField(Blog, related_name="followed_by", blank=True, verbose_name="Подписки пользователя")
 
     def save(self, *args, **kwargs):

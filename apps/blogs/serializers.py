@@ -17,5 +17,5 @@ class PostWriteSeriazliser(serializers.ModelSerializer):
 
 class BlogSeriazlier(serializers.ModelSerializer):
     class Meta:
-        models = Blog
-        fields = "__all__"  # TODO
+        model = Blog
+        fields = ["id", "title", "description"]

@@ -34,6 +34,27 @@ class PostViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.Gener
             raise exceptions.NotAcceptable("Пользователь уже пометил пост прочитанным")  # TODO
 
 
-class BlogViewSet(viewsets.ModelViewSet):
+class BlogViewSet(viewsets.GenericViewSet):
     queryset = Blog.objects.all()
-    serializer_class = BlogSeriazlier
+    permission_classes = [permissions.IsAuthenticated]
+
+    @action(detail=True, methods=["POST"], url_path="follow")
+    def follow_blog(self, request, pk=None):
+        user = self.request.user
+        blog = self.get_object()
+        if user == blog.owner:
+            raise exceptions.ValidationError("Вы не можете подписаться на себя")
+        if blog in user.follows.all():
+            raise exceptions.ValidationError("Вы уже подписаны на этот блог")
+        user.follows.add(blog)
+        serializer = BlogSeriazlier(instance=blog)
+        return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=["POST"], url_path="unfollow")
+    def unfollow_blog(self, request, pk=None):
+        user = self.request.user
+        blog = self.get_object()
+        if blog not in user.follows.all():
+            raise exceptions.ValidationError("Вы не подписаны на этот блог")
+        user.follows.remove(blog)
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
