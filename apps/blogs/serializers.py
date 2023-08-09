@@ -3,10 +3,16 @@ from rest_framework import serializers
 from apps.blogs.models import Blog, Post
 
 
-class PostSerializer(serializers.ModelSerializer):
+class PostReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ["title", "text", "created_at", "blog"]
+        fields = ["id", "title", "text", "created_at", "blog"]
+
+
+class PostWriteSeriazliser(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ["title", "text"]
 
 
 class BlogSeriazlier(serializers.ModelSerializer):
