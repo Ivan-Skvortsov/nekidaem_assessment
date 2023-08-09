@@ -1,0 +1,15 @@
+version: "3.8"
+volumes:
+  db_data:
+
+services:
+  db:
+    image: postgres:15.3
+    container_name: nekidaem_assessment_db_local
+    restart: on-failure
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    ports:
+      - "${DB_PORT}:5432"
