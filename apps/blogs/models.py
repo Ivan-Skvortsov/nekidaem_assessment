@@ -20,7 +20,7 @@ class Post(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name="posts", verbose_name="Блог")
 
     class Meta:
-        order_by = ["-created_at"]
+        ordering = ["-created_at"]
         verbose_name = "Пост"
         verbose_name_plural = "Посты"
 
