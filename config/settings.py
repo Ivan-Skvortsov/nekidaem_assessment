@@ -26,7 +26,7 @@ DJANGO_APPS = [
 
 THIRDPARTY_APPS = ["rest_framework", "rest_framework.authtoken"]
 
-LOCAL_APPS = ["apps.users", "apps.blogs"]
+LOCAL_APPS = ["apps.users", "apps.blogs", "apps.fake_db_data"]
 
 INSTALLED_APPS = DJANGO_APPS + THIRDPARTY_APPS + LOCAL_APPS
 

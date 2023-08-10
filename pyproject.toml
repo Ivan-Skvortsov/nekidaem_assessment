@@ -20,6 +20,7 @@ redis = "^4.6.0"
 [tool.poetry.group.dev.dependencies]
 flake8 = "^6.1.0"
 pre-commit = "^3.3.3"
+factory-boy = "^3.3.0"
 
 [build-system]
 requires = ["poetry-core"]
