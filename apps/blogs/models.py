@@ -2,15 +2,9 @@ from django.db import models
 
 
 class Blog(models.Model):
-    title = models.CharField(max_length=200, default="Название вашего блога", verbose_name="Название блога")
-    description = models.TextField(max_length=2000, default="Описание вашего блога", verbose_name="Описание блога")
-
     class Meta:
         verbose_name = "Блог"
         verbose_name_plural = "Блоги"
-
-    def __str__(self):
-        return f"Блог: {self.title[:50]}"
 
 
 class Post(models.Model):
