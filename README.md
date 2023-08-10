@@ -73,7 +73,7 @@
    ```
 Наполните базу данных тестовыми (фейковыми) данными (если это необходимо)
    ```sh
-   sudo docker compose -f docker-compose.yaml python manage.py fill_database
+   sudo docker compose -f docker-compose.yaml exec backend python manage.py fill_database
    ```
    > **Warning**:
    > Заполнение возможно только на пустой базе данных. Если в БД присутствуют данные, начала необходимо их удалить, выполнив команду `sudo docker compose -f docker-compose.yaml python manage.py flush`
