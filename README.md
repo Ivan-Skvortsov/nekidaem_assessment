@@ -79,7 +79,7 @@
    > Заполнение возможно только на пустой базе данных. Если в БД присутствуют данные, начала необходимо их удалить, выполнив команду `sudo docker compose -f docker-compose.yaml python manage.py flush`
 
    > **Note**:
-   > По умолчанию, команда `fill_database` создаёт 100 пользователей и 1000 постов. Если вам необходмио другое количество записей, укажите их в параметрах `--users`, `--posts`, например `sudo docker compose -f docker-compose.yaml python manage.py fill_database --users=500 --posts=3000`
+   > По умолчанию, команда `fill_database` создаёт 100 пользователей и 1000 постов. Если вам необходмио другое количество записей, укажите их в аргументах `--users`, `--posts`, например `sudo docker compose -f docker-compose.yaml python manage.py fill_database --users=500 --posts=3000`
 
 ## Использование приложения
 ### Ресурсы
