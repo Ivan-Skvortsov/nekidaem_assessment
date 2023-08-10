@@ -1,4 +1,3 @@
-from django.db import IntegrityError
 from rest_framework import exceptions, mixins, permissions, response, status, viewsets
 from rest_framework.decorators import action
 
@@ -8,7 +7,6 @@ from apps.blogs.serializers import (
     PostReadSerializer,
     PostWriteSeriazliser,
 )
-from apps.users.models import SeenPosts
 
 
 class PostViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
@@ -27,11 +25,8 @@ class PostViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.Gener
     def mark_post_as_seen(self, request, pk=None):
         post = self.get_object()
         user = self.request.user
-        try:
-            SeenPosts.objects.create(user=user, post=post)
-            return response.Response({"seen": "OK"}, status=status.HTTP_201_CREATED)
-        except IntegrityError:
-            raise exceptions.NotAcceptable("Пользователь уже пометил пост прочитанным")  # TODO
+        user.seen_posts.add(post)
+        return response.Response({"seen": "OK"}, status=status.HTTP_201_CREATED)
 
 
 class BlogViewSet(viewsets.GenericViewSet):
@@ -58,3 +53,14 @@ class BlogViewSet(viewsets.GenericViewSet):
             raise exceptions.ValidationError("Вы не подписаны на этот блог")
         user.follows.remove(blog)
         return response.Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class FeedViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = PostReadSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        posts_from_followed_blogs = Post.objects.filter(blog__in=user.follows.all())
+        seen_posts = user.seen_posts.all()
+        return posts_from_followed_blogs.exclude(pk__in=seen_posts)[:500]  # TODO constants
