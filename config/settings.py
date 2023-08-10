@@ -24,7 +24,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRDPARTY_APPS = ["rest_framework", "rest_framework.authtoken"]
+THIRDPARTY_APPS = ["rest_framework", "rest_framework.authtoken", "drf_spectacular"]
 
 LOCAL_APPS = ["apps.users", "apps.blogs", "apps.fake_db_data"]
 
@@ -128,6 +128,7 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
@@ -140,4 +141,12 @@ CELERY_BEAT_SCHEDULE = {
         "task": "apps.blogs.tasks.send_emails_to_users",
         "schedule": crontab(hour=SEND_EMAILS_HOUR, minute=SEND_EMAILS_MINUTE),
     },
+}
+
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Nekidaem assessment API",
+    "DESCRIPTION": "Тестовое задание Nekidaem",
+    "VERSION": "0.0.1",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
