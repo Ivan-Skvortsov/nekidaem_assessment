@@ -7,6 +7,7 @@ from apps.blogs.serializers import (
     PostReadSerializer,
     PostWriteSeriazliser,
 )
+from apps.blogs.utils import get_posts_for_user_feed
 
 
 class PostViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
@@ -38,7 +39,7 @@ class BlogViewSet(viewsets.GenericViewSet):
         user = self.request.user
         blog = self.get_object()
         if user == blog.owner:
-            raise exceptions.ValidationError("Вы не можете подписаться на себя")
+            raise exceptions.ValidationError("Вы не можете подписаться на себя")  # TODO: exceptions
         if blog in user.follows.all():
             raise exceptions.ValidationError("Вы уже подписаны на этот блог")
         user.follows.add(blog)
@@ -59,8 +60,5 @@ class FeedViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = PostReadSerializer
 
-    def get_queryset(self):
-        user = self.request.user
-        posts_from_followed_blogs = Post.objects.filter(blog__in=user.follows.all())
-        seen_posts = user.seen_posts.all()
-        return posts_from_followed_blogs.exclude(pk__in=seen_posts)[:500]  # TODO constants
+    def get_queryset(self):  # TODO: add filters
+        return get_posts_for_user_feed(self.request.user, 500)  # TODO: add constants

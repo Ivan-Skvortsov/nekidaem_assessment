@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+from celery.schedules import crontab
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -99,9 +100,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ru-RU"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Moscow"
 
 USE_I18N = True
 
@@ -125,4 +126,16 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
     ]
+}
+
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+
+SEND_EMAILS_HOUR = os.getenv("SEND_EMAILS_HOUR")
+SEND_EMAILS_MINUTE = os.getenv("SEND_EMAILS_MINUTE")
+
+CELERY_BEAT_SCHEDULE = {
+    "send_emails_to_users_task": {
+        "task": "apps.blogs.tasks.send_emails_to_users",
+        "schedule": crontab(hour=SEND_EMAILS_HOUR, minute=SEND_EMAILS_MINUTE),
+    },
 }
