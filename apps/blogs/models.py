@@ -6,6 +6,9 @@ class Blog(models.Model):
         verbose_name = "Блог"
         verbose_name_plural = "Блоги"
 
+    def __str__(self):
+        return f"Блог №{self.pk}"
+
 
 class Post(models.Model):
     title = models.CharField(max_length=140, blank=False, verbose_name="Заголовок поста")
