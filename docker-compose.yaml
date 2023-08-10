@@ -1,0 +1,63 @@
+version: '3.8'
+
+volumes:
+  nekidaem-assessment-db-volume:
+  nekidaem-assessment-static-volume:
+
+services:
+  db:
+    container_name: nekidaem_assessment_db
+    image: postgres:15.3
+    restart: always
+    volumes:
+      - nekidaem-assessment-db-volume:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  backend:
+    container_name: nekidaem_assesment_backend
+    image: nekidaem/backend
+    build: .
+    command: >
+      sh -c "python manage.py migrate &&
+      python manage.py collectstatic --no-input --clear &&
+      gunicorn config.wsgi:application --bind 0:8000"
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - nekidaem-assessment-static-volume:/NEKIDAEM_TEST/static/
+    env_file:
+      - .env
+
+  nginx:
+    container_name: nekidaem_assessment_nginx
+    image: nginx:1.25.1-alpine
+    ports:
+      - "80:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d/
+      - nekidaem-assessment-static-volume:/var/html/static/
+    depends_on:
+      - backend
+
+  redis:
+    image: redis:7-alpine
+
+  celery:
+    image: nekidaem/backend
+    command: sh -c "celery -A config worker -B --loglevel=INFO"
+    restart: always
+    depends_on:
+      - backend
+      - redis
+    env_file:
+      - .env
