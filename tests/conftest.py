@@ -46,6 +46,17 @@ def authorized_client_1(test_user_1):
 
 
 @pytest.fixture
+def authorized_client_2(test_user_2):
+    from rest_framework.authtoken.models import Token
+    from rest_framework.test import APIClient
+
+    token = Token.objects.get_or_create(user=test_user_2)[0]
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+    return client
+
+
+@pytest.fixture
 def valid_post_data():
     return {"title": "Заголовок поста", "text": "Текст поста"}
 
@@ -56,14 +67,3 @@ def test_posts(test_user_1):
     Post.objects.create(title="Title2", text="Text2", blog=test_user_1.blog)
     Post.objects.create(title="Title3", text="Text3", blog=test_user_1.blog)
     return Post.objects.all()
-
-
-# @pytest.fixture
-# def valid_user_data():
-#     return {
-#         'email': 'user3@example.com',
-#         'username': '@username3',
-#         'first_name': 'Мистер',
-#         'last_name': 'Икс',
-#         'password': 'SomePassword123'
-#     }
