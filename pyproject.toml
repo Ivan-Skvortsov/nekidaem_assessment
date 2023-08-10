@@ -21,7 +21,14 @@ redis = "^4.6.0"
 flake8 = "^6.1.0"
 pre-commit = "^3.3.3"
 factory-boy = "^3.3.0"
+pytest-django = "^4.5.2"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.test_settings"
+python_files = "test_*.py"
+pythonpath = "."
+filterwarnings = "ignore::DeprecationWarning"
