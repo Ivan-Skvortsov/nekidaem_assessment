@@ -123,8 +123,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 REST_FRAMEWORK = {
-    # TODO: добавить эндпойнт или пихнуть в админку
-    # TODO: https://www.django-rest-framework.org/api-guide/authentication/#with-django-admin
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
     ],

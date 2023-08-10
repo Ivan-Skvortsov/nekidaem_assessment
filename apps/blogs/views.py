@@ -1,6 +1,7 @@
 from rest_framework import exceptions, mixins, permissions, response, status, viewsets
 from rest_framework.decorators import action
 
+from apps.blogs import constants
 from apps.blogs.models import Blog, Post
 from apps.blogs.serializers import (
     BlogSeriazlier,
@@ -39,7 +40,7 @@ class BlogViewSet(viewsets.GenericViewSet):
         user = self.request.user
         blog = self.get_object()
         if user == blog.owner:
-            raise exceptions.ValidationError("Вы не можете подписаться на себя")  # TODO: exceptions
+            raise exceptions.ValidationError("Вы не можете подписаться на себя")
         if blog in user.follows.all():
             raise exceptions.ValidationError("Вы уже подписаны на этот блог")
         user.follows.add(blog)
@@ -60,5 +61,5 @@ class FeedViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = PostReadSerializer
 
-    def get_queryset(self):  # TODO: add filters
-        return get_posts_for_user_feed(self.request.user, 500)  # TODO: add constants
+    def get_queryset(self):
+        return get_posts_for_user_feed(self.request.user, constants.MAX_POSTS_PER_FEED)
