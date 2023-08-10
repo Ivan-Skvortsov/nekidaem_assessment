@@ -18,4 +18,4 @@ class PostWriteSeriazliser(serializers.ModelSerializer):
 class BlogSeriazlier(serializers.ModelSerializer):  # TODO: поменять модель
     class Meta:
         model = Blog
-        fields = ["id", "title", "description"]
+        fields = ["id"]
